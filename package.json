@@ -1,0 +1,11 @@
+{
+  "name": "simple-b2-list",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "pages:dev": "wrangler pages dev spa/dist/ --compatibility-date=2023-12-01 --kv=SIMPLE_BLAZE_LIST_KV"
+  },
+  "devDependencies": {
+    "wrangler": "^3.47.0"
+  }
+}

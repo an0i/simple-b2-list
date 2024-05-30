@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/index.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@material-design-icons/font@0.14.13/filled.css" />
+    <title>Static Shared Drive</title>
+  </head>
+  <body class="bg-slate-50 mx-auto max-w-screen-sm">
+    <header class="flex">
+      <a href="/" class="flex items-center gap-2 hover:text-sky-500 m-4">
+        <img class="size-8 rounded-full" src="/avatar.webp" alt="logo" />
+        <span class="text-xl tracking-in-expand">Static Shared Drive</span>
+      </a>
+    </header>
+
+    <noscript class="m-4 font-mono text-red-500">本页面暂未适配 noscript 环境</noscript>
+
+    <div id="breadcrumbs"></div>
+
+    <div id="viewer"></div>
+
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>

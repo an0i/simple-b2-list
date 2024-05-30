@@ -1,0 +1,12 @@
+{
+  "name": "@simple-b2-list/functions",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "hono": "^4.4.0",
+    "@simple-b2-list/b2-client": "workspace:b2-client"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240403.0"
+  }
+}
