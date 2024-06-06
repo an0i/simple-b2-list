@@ -1,4 +1,11 @@
 import { type Component, Match, Switch, createResource, createMemo, For } from "solid-js";
+import { usePath } from "../contexts/Path";
+import FolderIcon from "../icons/material-symbols-outlined/FolderIcon";
+import DescriptionIcon from "../icons/material-symbols-outlined/DescriptionIcon";
+import HourglassEmptyIcon from "../icons/material-symbols-outlined/HourglassEmptyIcon";
+import ErrorIcon from "../icons/material-symbols-outlined/ErrorIcon";
+import NotListedLocationIcon from "../icons/material-symbols-outlined/NotListedLocationIcon";
+import DownloadIcon from "../icons/material-symbols-outlined/DownloadIcon";
 
 type Node =
   | {
@@ -14,42 +21,39 @@ type Node =
 type FolderNode = Extract<Node, { children: Node[] }>;
 type FileNode = Exclude<Node, { children: Node[] }>;
 
-// function path2IsFolderPath(path: string) {
-//   return path.endsWith("/") || path === "";
-// }
-
 function path2Segments(path: string) {
   const temp = path.split("/");
   return temp[temp.length - 1] === "" ? temp.slice(0, -1) : temp;
 }
 
 const fetchRootNode = async (rootNodeUrl: string) => {
-  import.meta.env.DEV && (await new Promise((_res, _rej) => setTimeout(() => _res(null), (Math.random() / 3 + 0.1) * 10000)));
+  import.meta.env.DEV && (await new Promise((_res, _rej) => setTimeout(() => _res(null), (Math.random() / 3 + 0.1) * 8000)));
 
   return (await (await fetch(rootNodeUrl)).json()) as FolderNode;
 };
 
-const Viewer: Component<{ rootNodeUrl: string; path: string }> = (props) => {
+const Viewer: Component<{ rootNodeUrl: string }> = (props) => {
+  const path = usePath();
   const [rootNode] = createResource(() => props.rootNodeUrl, fetchRootNode);
 
   return (
     <div class="bg-white mx-4 mb-4 rounded-xl shadow overflow-hidden">
       <Switch>
         <Match when={rootNode.loading}>
-          <div class="fade-in flex items-center">
-            <span class="material-icons text-slate-500 text-[36px] m-3 animate-spin">hourglass_empty</span>
-            <span class="text-slate-500">加载中</span>
+          <div class="fade-in flex items-center text-slate-500">
+            <HourglassEmptyIcon class="size-9 m-3 animate-spin" />
+            <span>加载中</span>
           </div>
         </Match>
         <Match when={rootNode.error}>
-          <div class="fade-in flex items-center">
-            <span class="material-icons text-red-500 text-[36px] m-3">error</span>
-            <span class="text-red-500 font-mono">{rootNode.error.toString()}</span>
+          <div class="fade-in flex items-center text-red-500">
+            <ErrorIcon class="size-9 m-3" />
+            <span class="font-mono">{rootNode.error.toString()}</span>
           </div>
         </Match>
         <Match when={rootNode()}>
           <div class="fade-in">
-            <Moder rootNode={rootNode()!} path={props.path} />
+            <Moder rootNode={rootNode()!} path={path()} />
           </div>
         </Match>
       </Switch>
@@ -96,7 +100,7 @@ const FolderFinder: Component<{ rootNode: FolderNode; path: string }> = (props) 
     <Switch>
       <Match when={currentFolderNode() === undefined}>
         <div class="fade-in flex items-center text-slate-500">
-          <span class="material-icons text-[36px] m-3">not_listed_location</span>
+          <NotListedLocationIcon class="size-9 m-3" />
           <span>找不到指定文件夹</span>
         </div>
       </Match>
@@ -107,13 +111,13 @@ const FolderFinder: Component<{ rootNode: FolderNode; path: string }> = (props) 
               <Switch>
                 <Match when={"children" in node}>
                   <a class="flex items-center hover:bg-slate-100" href={`/#${props.path}${node.name}/`}>
-                    <span class="material-icons text-yellow-500 text-[36px] m-3">folder</span>
+                    <FolderIcon class="text-yellow-500 size-9 m-3" />
                     <span class="break-all pr-2">{node.name}</span>
                   </a>
                 </Match>
                 <Match when={true}>
                   <a class="flex items-center hover:bg-slate-100" href={`/#${props.path}${node.name}`}>
-                    <span class="material-icons text-blue-300 text-[36px] m-3">description</span>
+                    <DescriptionIcon class="text-blue-300 size-9 m-3" />
                     <span class="break-all pr-2">{node.name}</span>
                   </a>
                 </Match>
@@ -148,8 +152,8 @@ const FileFinder: Component<{ rootNode: Node; path: string }> = (props) => {
   return (
     <Switch>
       <Match when={currentFileNode() === undefined}>
-        <div class="fade-in flex items-center">
-          <span class="material-icons text-slate-300 text-[36px] m-3">question_mark</span>
+        <div class="fade-in flex items-center text-slate-500">
+          <NotListedLocationIcon class="size-9 m-3" />
           <span>找不到指定文件</span>
         </div>
       </Match>
@@ -157,8 +161,8 @@ const FileFinder: Component<{ rootNode: Node; path: string }> = (props) => {
         <div>
           <pre class="p-5 text-red-600 rounded-lg overflow-x-auto">{JSON.stringify(currentFileNode()!, null, 2)}</pre>
           <hr />
-          <a href={`/api/fileNode/${props.path}`} class="py-1 pl-3 pr-4 text-sky-800 bg-blue-100 hover:bg-blue-200 active:hover:bg-blue-300 rounded-full float-right m-3 inline-block">
-            <span class="material-icons align-middle">download</span>
+          <a href={`/api/fileNode/${props.path}`} class="py-1 pl-3 pr-4 text-sky-800 bg-blue-100 hover:bg-blue-200 active:hover:bg-blue-300 rounded-full float-right m-3 flex items-center">
+            <DownloadIcon class="align-middle" />
             <span>下载</span>
           </a>
         </div>
