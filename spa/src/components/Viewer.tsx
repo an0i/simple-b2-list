@@ -41,13 +41,13 @@ const Viewer: Component<{ rootNodeUrl: string }> = (props) => {
       <Switch>
         <Match when={rootNode.loading}>
           <div class="fade-in flex items-center text-slate-500">
-            <HourglassEmptyIcon class="size-9 m-3 animate-spin" />
+            <HourglassEmptyIcon class="shrink-0 size-9 m-3 animate-spin" />
             <span>加载中</span>
           </div>
         </Match>
         <Match when={rootNode.error}>
           <div class="fade-in flex items-center text-red-500">
-            <ErrorIcon class="size-9 m-3" />
+            <ErrorIcon class="shrink-0 size-9 m-3" />
             <span class="font-mono">{rootNode.error.toString()}</span>
           </div>
         </Match>
@@ -100,7 +100,7 @@ const FolderFinder: Component<{ rootNode: FolderNode; path: string }> = (props) 
     <Switch>
       <Match when={currentFolderNode() === undefined}>
         <div class="fade-in flex items-center text-slate-500">
-          <NotListedLocationIcon class="size-9 m-3" />
+          <NotListedLocationIcon class="shrink-0 size-9 m-3" />
           <span>找不到指定文件夹</span>
         </div>
       </Match>
@@ -111,13 +111,13 @@ const FolderFinder: Component<{ rootNode: FolderNode; path: string }> = (props) 
               <Switch>
                 <Match when={"children" in node}>
                   <a class="flex items-center hover:bg-slate-100" href={`/#${props.path}${node.name}/`}>
-                    <FolderIcon class="text-yellow-500 size-9 m-3" />
+                    <FolderIcon class="shrink-0 text-yellow-500 size-9 m-3" />
                     <span class="break-all pr-2">{node.name}</span>
                   </a>
                 </Match>
                 <Match when={true}>
                   <a class="flex items-center hover:bg-slate-100" href={`/#${props.path}${node.name}`}>
-                    <DescriptionIcon class="text-blue-300 size-9 m-3" />
+                    <DescriptionIcon class="shrink-0 text-blue-300 size-9 m-3" />
                     <span class="break-all pr-2">{node.name}</span>
                   </a>
                 </Match>
@@ -153,7 +153,7 @@ const FileFinder: Component<{ rootNode: Node; path: string }> = (props) => {
     <Switch>
       <Match when={currentFileNode() === undefined}>
         <div class="fade-in flex items-center text-slate-500">
-          <NotListedLocationIcon class="size-9 m-3" />
+          <NotListedLocationIcon class="shrink-0 size-9 m-3" />
           <span>找不到指定文件</span>
         </div>
       </Match>
@@ -162,7 +162,7 @@ const FileFinder: Component<{ rootNode: Node; path: string }> = (props) => {
           <pre class="p-5 text-red-600 rounded-lg overflow-x-auto">{JSON.stringify(currentFileNode()!, null, 2)}</pre>
           <hr />
           <a href={`/api/fileNode/${props.path}`} class="py-1 pl-3 pr-4 text-sky-800 bg-blue-100 hover:bg-blue-200 active:hover:bg-blue-300 rounded-full float-right m-3 flex items-center">
-            <DownloadIcon class="align-middle" />
+            <DownloadIcon class="shrink-0 align-middle" />
             <span>下载</span>
           </a>
         </div>
