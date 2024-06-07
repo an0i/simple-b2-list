@@ -28,7 +28,7 @@ const route = app
     return c.json(rootNode, 200);
   })
   .get("/fileNode/:name{.*}", async (c) => {
-    return (await new B2Client(c.env.ID, c.env.KEY).auth()).down(c.env.BUCKET_NAME, c.req.param("name"));
+    return (await new B2Client(c.env.ID, c.env.KEY).auth()).down(c.env.BUCKET_NAME, encodeURIComponent(c.req.param("name")));
   });
 
 export type AppType = typeof route;
