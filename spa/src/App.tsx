@@ -1,16 +1,18 @@
-import { PathProvider } from "./contexts/Path";
 import Breadcrumbs from "./components/Breadcrumbs";
 import Header from "./components/Header";
 import Viewer from "./components/Viewer";
+import { usePath } from "./contexts/Path";
 
 export default function App() {
+  const path = usePath();
+
   return (
-    <PathProvider>
+    <>
       <Header />
 
-      <Breadcrumbs />
+      <Breadcrumbs path={path()} />
 
-      <Viewer rootNodeUrl="/api/rootNode" />
-    </PathProvider>
+      <Viewer path={path()} rootNodeUrl="/api/rootNode" />
+    </>
   );
 }

@@ -1,25 +1,11 @@
 import { type Component, Match, Switch, createResource, createMemo, For } from "solid-js";
-import { usePath } from "../contexts/Path";
 import FolderIcon from "../icons/material-symbols-outlined/FolderIcon";
 import DescriptionIcon from "../icons/material-symbols-outlined/DescriptionIcon";
 import HourglassEmptyIcon from "../icons/material-symbols-outlined/HourglassEmptyIcon";
 import ErrorIcon from "../icons/material-symbols-outlined/ErrorIcon";
 import NotListedLocationIcon from "../icons/material-symbols-outlined/NotListedLocationIcon";
 import DownloadIcon from "../icons/material-symbols-outlined/DownloadIcon";
-
-type Node =
-  | {
-      name: string;
-      upstamp: number;
-      len: number;
-    }
-  | {
-      name: string;
-      children: Node[];
-    };
-
-type FolderNode = Extract<Node, { children: Node[] }>;
-type FileNode = Exclude<Node, { children: Node[] }>;
+import type { SblNode, SblFileNodeAssert, SblFolderNodeAssert } from "@simple-b2-list/types";
 
 function path2Segments(path: string) {
   const temp = path.split("/");
@@ -27,13 +13,12 @@ function path2Segments(path: string) {
 }
 
 const fetchRootNode = async (rootNodeUrl: string) => {
-  import.meta.env.DEV && (await new Promise((_res, _rej) => setTimeout(() => _res(null), (Math.random() / 3 + 0.1) * 8000)));
+  if (import.meta.env.DEV) await new Promise((_res, _rej) => setTimeout(() => _res(null), (1 + (Math.random() - 0.5) / 2) * 1000));
 
-  return (await (await fetch(rootNodeUrl)).json()) as FolderNode;
+  return (await (await fetch(rootNodeUrl)).json()) as SblFolderNodeAssert;
 };
 
-const Viewer: Component<{ rootNodeUrl: string }> = (props) => {
-  const path = usePath();
+const Viewer: Component<{ path: string; rootNodeUrl: string }> = (props) => {
   const [rootNode] = createResource(() => props.rootNodeUrl, fetchRootNode);
 
   return (
@@ -53,7 +38,7 @@ const Viewer: Component<{ rootNodeUrl: string }> = (props) => {
         </Match>
         <Match when={rootNode()}>
           <div class="fade-in">
-            <Moder rootNode={rootNode()!} path={path()} />
+            <Moder rootNode={rootNode()!} path={props.path} />
           </div>
         </Match>
       </Switch>
@@ -61,13 +46,13 @@ const Viewer: Component<{ rootNodeUrl: string }> = (props) => {
   );
 };
 
-const Moder: Component<{ rootNode: Node; path: string }> = (props) => {
+const Moder: Component<{ rootNode: SblNode; path: string }> = (props) => {
   const folderMode = () => props.path.endsWith("/") || props.path === "";
 
   return (
     <Switch>
       <Match when={folderMode() === true}>
-        <FolderFinder rootNode={props.rootNode as FolderNode} path={props.path} />
+        <FolderFinder rootNode={props.rootNode as SblFolderNodeAssert} path={props.path} />
       </Match>
       <Match when={true}>
         <FileFinder rootNode={props.rootNode} path={props.path} />
@@ -76,13 +61,13 @@ const Moder: Component<{ rootNode: Node; path: string }> = (props) => {
   );
 };
 
-const FolderFinder: Component<{ rootNode: FolderNode; path: string }> = (props) => {
+const FolderFinder: Component<{ rootNode: SblFolderNodeAssert; path: string }> = (props) => {
   const currentFolderNode = createMemo(() => {
     const segments = path2Segments(props.path);
     let currentNode = props.rootNode;
     for (const segment of segments) {
       if (!("children" in currentNode)) return undefined;
-      const result = currentNode.children.find((child) => "children" in child && child.name === segment) as FolderNode | undefined;
+      const result = currentNode.children.find((child) => "children" in child && child.name === segment) as SblFolderNodeAssert | undefined;
       if (result === undefined) return undefined;
       currentNode = result;
     }
@@ -130,7 +115,7 @@ const FolderFinder: Component<{ rootNode: FolderNode; path: string }> = (props) 
   );
 };
 
-const FileFinder: Component<{ rootNode: Node; path: string }> = (props) => {
+const FileFinder: Component<{ rootNode: SblNode; path: string }> = (props) => {
   const currentFileNode = createMemo(() => {
     const segments = path2Segments(props.path);
     let currentNode = props.rootNode;
@@ -146,7 +131,7 @@ const FileFinder: Component<{ rootNode: Node; path: string }> = (props) => {
     if (result === undefined) return undefined;
     currentNode = result;
 
-    return currentNode as FileNode;
+    return currentNode as SblFileNodeAssert;
   });
 
   return (

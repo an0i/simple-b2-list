@@ -1,14 +1,13 @@
 import { For, Match, Switch, createMemo } from "solid-js";
-import { usePath } from "../contexts/Path";
+import type { Component } from "solid-js";
 
 function path2Segments(path: string) {
   const temp = path.split("/");
   return temp[temp.length - 1] === "" ? temp.slice(0, -1) : temp;
 }
 
-const Breadcrumbs = () => {
-  const path = usePath();
-  const segments = createMemo(() => path2Segments(path()));
+const Breadcrumbs: Component<{ path: string }> = (props) => {
+  const segments = createMemo(() => path2Segments(props.path));
 
   return (
     <div class="mx-2 p-2 flex gap-1 items-center text-slate-500 flex-wrap *:text-ellipsis *:overflow-hidden *:max-w-[95%]">

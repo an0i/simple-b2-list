@@ -49,18 +49,6 @@ export class B2Client {
     }
     return files;
   }
-
-  retryAfterAuthDecorator(method: any) {
-    const me = this;
-    return async function retryer(...rest: any) {
-      try {
-        return await method.apply(me, rest);
-      } finally {
-        await me.auth();
-        return await method.apply(me, rest);
-      }
-    };
-  }
 }
 
 export * as native from "./native.js";
