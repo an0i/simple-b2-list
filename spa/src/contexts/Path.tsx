@@ -1,5 +1,5 @@
-import { createContext, createSignal, onCleanup, onMount, useContext } from "solid-js";
 import type { Accessor, Component, JSXElement } from "solid-js";
+import { createContext, createSignal, onCleanup, onMount, useContext } from "solid-js";
 
 function getCurrentPath() {
   return decodeURIComponent(window.location.hash.slice(1));

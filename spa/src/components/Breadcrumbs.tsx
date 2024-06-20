@@ -1,10 +1,6 @@
-import { For, Match, Switch, createMemo } from "solid-js";
 import type { Component } from "solid-js";
-
-function path2Segments(path: string) {
-  const temp = path.split("/");
-  return temp[temp.length - 1] === "" ? temp.slice(0, -1) : temp;
-}
+import { For, Match, Switch, createMemo } from "solid-js";
+import { path2Segments } from "../utils";
 
 const Breadcrumbs: Component<{ path: string }> = (props) => {
   const segments = createMemo(() => path2Segments(props.path));
