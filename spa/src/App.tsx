@@ -16,7 +16,7 @@ export default function App() {
 
       <Breadcrumbs path={path()} />
 
-      <RootNodeViewer rootNodeUrl="/api/rootNode" />
+      <RootNodeViewer path={path()} rootNodeUrl="/api/rootNode" />
     </>
   );
 }

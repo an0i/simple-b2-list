@@ -2,7 +2,6 @@ import type { SblFolderNodeAssert, SblNode } from "@simple-b2-list/types";
 import type { Component } from "solid-js";
 import { For, Match, Switch, createMemo, createResource } from "solid-js";
 import { ResourceLoader } from "../components/ResourceLoader";
-import { usePath } from "../contexts/Path";
 import { DescriptionIcon, DownloadIcon, ErrorIcon, FolderIcon, HourglassEmptyIcon, NotListedLocationIcon } from "../icons/material-symbols-outlined";
 import { calcCurrentFileNode, calcCurrentFolderNode } from "../utils";
 
@@ -12,28 +11,26 @@ const fetchRootNode = async (rootNodeUrl: string) => {
   return (await (await fetch(rootNodeUrl)).json()) as SblFolderNodeAssert;
 };
 
-export default function RootNodeViewer(props: { rootNodeUrl: string }) {
+export default function RootNodeViewer(props: { path: string; rootNodeUrl: string }) {
   const [rootNode] = createResource(props.rootNodeUrl, fetchRootNode);
   return (
     <div class="bg-white mx-4 mb-4 rounded-xl shadow overflow-hidden">
-      <ResourceLoader resource={rootNode} errorComponent={ErrorAlert} loadingComponent={LoadingAlert} successComponent={Moder} />
+      <ResourceLoader resource={rootNode} whenError={(error) => <ErrorAlert error={error} />} whenLoading={() => <LoadingAlert />} whenSuccess={(data) => <Moder path={props.path} data={data} />} />
     </div>
   );
 }
 
-const Moder: Component<{ data: Awaited<ReturnType<typeof fetchRootNode>> }> = (props) => {
-  const path = usePath();
-
-  const folderMode = () => path().endsWith("/") || path() === "";
+const Moder: Component<{ path: string; data: Awaited<ReturnType<typeof fetchRootNode>> }> = (props) => {
+  const folderMode = () => props.path.endsWith("/") || props.path === "";
 
   return (
     <div class="fade-in">
       <Switch>
         <Match when={folderMode() === true}>
-          <FolderFinder path={path()} rootNode={props.data} />
+          <FolderFinder path={props.path} rootNode={props.data} />
         </Match>
         <Match when={true}>
-          <FileFinder path={path()} rootNode={props.data} />
+          <FileFinder path={props.path} rootNode={props.data} />
         </Match>
       </Switch>
     </div>
