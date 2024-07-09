@@ -1,10 +1,10 @@
 /* @refresh reload */
-import { render } from "solid-js/web";
+import { render } from 'solid-js/web';
 
-import "./index.css";
+import './index.css';
 
-import { PathProvider } from "./contexts/Path";
-import App from "./App";
+import { PathProvider } from './contexts/Path';
+import App from './App';
 
 render(
   () => (
@@ -12,5 +12,5 @@ render(
       <App />
     </PathProvider>
   ),
-  document.getElementById("app")!
+  document.getElementById('app')!,
 );

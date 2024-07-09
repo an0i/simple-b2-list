@@ -1,5 +1,11 @@
-import type { Accessor, Component, JSXElement } from "solid-js";
-import { createContext, createSignal, onCleanup, onMount, useContext } from "solid-js";
+import type { Accessor, Component, JSXElement } from 'solid-js';
+import {
+  createContext,
+  createSignal,
+  onCleanup,
+  onMount,
+  useContext,
+} from 'solid-js';
 
 function getCurrentPath() {
   return decodeURIComponent(window.location.hash.slice(1));
@@ -14,10 +20,12 @@ export const PathProvider: Component<{ children: JSXElement }> = (props) => {
     setPath(getCurrentPath());
   }
 
-  onMount(() => window.addEventListener("hashchange", updatePath));
-  onCleanup(() => window.removeEventListener("hashchange", updatePath));
+  onMount(() => window.addEventListener('hashchange', updatePath));
+  onCleanup(() => window.removeEventListener('hashchange', updatePath));
 
-  return <PathContext.Provider value={path}>{props.children}</PathContext.Provider>;
+  return (
+    <PathContext.Provider value={path}>{props.children}</PathContext.Provider>
+  );
 };
 
 export function usePath() {

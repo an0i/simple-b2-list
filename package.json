@@ -6,6 +6,7 @@
     "pages:dev": "wrangler pages dev spa/dist/ --compatibility-date=2023-12-01 --kv=SIMPLE_BLAZE_LIST_KV"
   },
   "devDependencies": {
+    "prettier": "^3.3.2",
     "wrangler": "^3.47.0"
   }
 }

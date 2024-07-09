@@ -1,5 +1,5 @@
 packages:
-  - "spa/"
-  - "functions/"
-  - "b2-client/"
-  - "types/"
+  - 'spa/'
+  - 'functions/'
+  - 'b2-client/'
+  - 'types/'

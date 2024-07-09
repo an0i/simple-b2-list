@@ -1,6 +1,6 @@
-import Breadcrumbs from "./sections/Breadcrumbs";
-import { usePath } from "./contexts/Path";
-import RootNodeViewer from "./sections/RootNodeViewer";
+import Breadcrumbs from './sections/Breadcrumbs';
+import { usePath } from './contexts/Path';
+import RootNodeViewer from './sections/RootNodeViewer';
 
 export default function App() {
   const path = usePath();

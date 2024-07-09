@@ -1,6 +1,6 @@
-import type { Component } from "solid-js";
-import { For, Match, Switch, createMemo } from "solid-js";
-import { path2Segments } from "../utils";
+import type { Component } from 'solid-js';
+import { For, Match, Switch, createMemo } from 'solid-js';
+import { path2Segments } from '../utils';
 
 const Breadcrumbs: Component<{ path: string }> = (props) => {
   const segments = createMemo(() => path2Segments(props.path));
@@ -12,7 +12,10 @@ const Breadcrumbs: Component<{ path: string }> = (props) => {
           <span class="px-2 py-1 text-black">根目录</span>
         </Match>
         <Match when={segments().length >= 1}>
-          <a href="/#" class="px-2 py-1 bg-white hover:bg-slate-100 rounded-full shadow">
+          <a
+            href="/#"
+            class="px-2 py-1 bg-white hover:bg-slate-100 rounded-full shadow"
+          >
             根目录
           </a>
           <For each={segments().slice(0, -1)}>
@@ -22,7 +25,7 @@ const Breadcrumbs: Component<{ path: string }> = (props) => {
                 <a
                   href={`/#${segments()
                     .slice(0, index() + 1)
-                    .join("/")}/`}
+                    .join('/')}/`}
                   class="px-2 py-1 bg-white hover:bg-slate-100 rounded-full shadow"
                 >
                   {segment}
@@ -31,7 +34,9 @@ const Breadcrumbs: Component<{ path: string }> = (props) => {
             )}
           </For>
           <span class="select-none cursor-default">/</span>
-          <span class="px-2 py-1 text-black">{segments()[segments().length - 1]}</span>
+          <span class="px-2 py-1 text-black">
+            {segments()[segments().length - 1]}
+          </span>
         </Match>
       </Switch>
     </div>

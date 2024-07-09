@@ -2,9 +2,9 @@ import type {
   SblFileNodeAssert,
   SblFolderNodeAssert,
   SblNode,
-} from "@simple-b2-list/types";
-import type { Component } from "solid-js";
-import { For, Match, Switch, createMemo, createResource } from "solid-js";
+} from '@simple-b2-list/types';
+import type { Component } from 'solid-js';
+import { For, Match, Switch, createMemo, createResource } from 'solid-js';
 import {
   IconDescription,
   IconDownload,
@@ -12,13 +12,13 @@ import {
   IconFolder,
   IconHourglassEmpty,
   IconNotListedLocation,
-} from "./../components/icons";
-import { calcCurrentFileNode, calcCurrentFolderNode } from "../utils";
+} from './../components/icons';
+import { calcCurrentFileNode, calcCurrentFolderNode } from '../utils';
 
 const fetchRootNode = async (rootNodeUrl: string) => {
   if (import.meta.env.DEV)
     await new Promise((_res, _rej) =>
-      setTimeout(() => _res(null), (1 + (Math.random() - 0.5) / 2) * 1000)
+      setTimeout(() => _res(null), (1 + (Math.random() - 0.5) / 2) * 1000),
     );
 
   return (await (await fetch(rootNodeUrl)).json()) as SblFolderNodeAssert;
@@ -50,7 +50,7 @@ const Moder: Component<{
   path: string;
   data: Awaited<ReturnType<typeof fetchRootNode>>;
 }> = (props) => {
-  const folderMode = () => props.path.endsWith("/") || props.path === "";
+  const folderMode = () => props.path.endsWith('/') || props.path === '';
 
   return (
     <Switch>
@@ -69,7 +69,7 @@ const FolderNodeFinder: Component<{
   path: string;
 }> = (props) => {
   const currentFolderNode = createMemo(() =>
-    calcCurrentFolderNode(props.rootNode, props.path)
+    calcCurrentFolderNode(props.rootNode, props.path),
   );
 
   return (
@@ -93,7 +93,7 @@ const FolderNodeViewer: Component<{
       <For each={props.folderNode.children}>
         {(node) => (
           <Switch>
-            <Match when={"children" in node}>
+            <Match when={'children' in node}>
               <a
                 class="flex pr-4 items-center hover:bg-slate-100"
                 href={`/#${props.path}${node.name}/`}
@@ -119,10 +119,10 @@ const FolderNodeViewer: Component<{
 };
 
 const FileNodeFinder: Component<{ rootNode: SblNode; path: string }> = (
-  props
+  props,
 ) => {
   const currentFileNode = createMemo(() =>
-    calcCurrentFileNode(props.rootNode, props.path)
+    calcCurrentFileNode(props.rootNode, props.path),
   );
 
   return (
