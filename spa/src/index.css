@@ -2,7 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-.fade-in {
+@layer components {
+  .btn {
+    @apply py-1 px-3 text-sky-800 bg-blue-100 hover:bg-blue-200 active:hover:bg-blue-300 rounded-full flex items-center;
+  }
+}
+
+/* .fade-in {
   animation: fade-in 1.2s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 @keyframes fade-in {
@@ -12,4 +18,4 @@
   100% {
     opacity: 1;
   }
-}
+} */
