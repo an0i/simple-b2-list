@@ -3,7 +3,7 @@ import { usePath } from './contexts/Path';
 import RootNodeViewer from './sections/RootNodeViewer';
 
 export default function App() {
-  const path = usePath();
+  const path = usePath()!;
 
   return (
     <>

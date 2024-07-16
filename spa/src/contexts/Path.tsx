@@ -11,7 +11,7 @@ function getCurrentPath() {
   return decodeURIComponent(window.location.hash.slice(1));
 }
 
-const PathContext = createContext<Accessor<string>>(getCurrentPath);
+const PathContext = createContext<Accessor<string>>();
 
 export const PathProvider: Component<{ children: JSXElement }> = (props) => {
   const [path, setPath] = createSignal(getCurrentPath());

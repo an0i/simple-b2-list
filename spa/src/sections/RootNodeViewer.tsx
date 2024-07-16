@@ -3,7 +3,7 @@ import type {
   SblFolderNodeAssert,
   SblNode,
 } from '@simple-b2-list/types';
-import type { Component } from 'solid-js';
+import type { Component, JSXElement } from 'solid-js';
 import { For, Match, Switch, createMemo, createResource } from 'solid-js';
 import {
   IconDescription,
@@ -30,13 +30,13 @@ export default function RootNodeViewer(props: {
 }) {
   const [rootNode] = createResource(props.rootNodeUrl, fetchRootNode);
   return (
-    <div class="bg-white mx-4 mb-4 rounded-xl shadow overflow-hidden">
+    <div class="mb-4">
       <Switch>
         <Match when={rootNode.loading}>
-          <LoadingAlert />
+          <LoadingView />
         </Match>
         <Match when={rootNode.error}>
-          <ErrorAlert error={rootNode.error} />
+          <ErrorView error={rootNode.error} />
         </Match>
         <Match when={rootNode()}>
           <Moder data={rootNode()!} path={props.path} />
@@ -75,46 +75,12 @@ const FolderNodeFinder: Component<{
   return (
     <Switch>
       <Match when={currentFolderNode() === undefined}>
-        <NotFoundFolderAlert />
+        <NotFoundFolderView />
       </Match>
       <Match when={true}>
-        <FolderNodeViewer folderNode={currentFolderNode()!} path={props.path} />
+        <FolderNodeView folderNode={currentFolderNode()!} path={props.path} />
       </Match>
     </Switch>
-  );
-};
-
-const FolderNodeViewer: Component<{
-  folderNode: SblFolderNodeAssert;
-  path: string;
-}> = (props) => {
-  return (
-    <div class="divide-y">
-      <For each={props.folderNode.children}>
-        {(node) => (
-          <Switch>
-            <Match when={'children' in node}>
-              <a
-                class="flex pr-4 items-center hover:bg-slate-100"
-                href={`/#${props.path}${node.name}/`}
-              >
-                <IconFolder class="shrink-0 text-yellow-500 size-9 m-3" />
-                <span class="break-all">{node.name}</span>
-              </a>
-            </Match>
-            <Match when={true}>
-              <a
-                class="flex pr-4 items-center hover:bg-slate-100"
-                href={`/#${props.path}${node.name}`}
-              >
-                <IconDescription class="shrink-0 text-blue-300 size-9 m-3" />
-                <span class="break-all">{node.name}</span>
-              </a>
-            </Match>
-          </Switch>
-        )}
-      </For>
-    </div>
   );
 };
 
@@ -128,63 +94,121 @@ const FileNodeFinder: Component<{ rootNode: SblNode; path: string }> = (
   return (
     <Switch>
       <Match when={currentFileNode() === undefined}>
-        <NotFoundFileAlert />
+        <NotFoundFileView />
       </Match>
       <Match when={true}>
-        <FileNodeViewer fileNode={currentFileNode()!} path={props.path} />
+        <FileNodeView fileNode={currentFileNode()!} path={props.path} />
       </Match>
     </Switch>
   );
 };
-const FileNodeViewer: Component<{
+
+const FolderNodeView: Component<{
+  folderNode: SblFolderNodeAssert;
+  path: string;
+}> = (props) => {
+  return (
+    <Paper>
+      <div class="divide-y">
+        <For each={props.folderNode.children}>
+          {(node) => (
+            <Switch>
+              <Match when={'children' in node}>
+                <a
+                  class="flex pr-4 items-center hover:bg-slate-100"
+                  href={`/#${props.path}${node.name}/`}
+                >
+                  <IconFolder class="shrink-0 text-yellow-500 size-9 m-3" />
+                  <span class="break-all">{node.name}</span>
+                </a>
+              </Match>
+              <Match when={true}>
+                <a
+                  class="flex pr-4 items-center hover:bg-slate-100"
+                  href={`/#${props.path}${node.name}`}
+                >
+                  <IconDescription class="shrink-0 text-blue-300 size-9 m-3" />
+                  <span class="break-all">{node.name}</span>
+                </a>
+              </Match>
+            </Switch>
+          )}
+        </For>
+      </div>
+    </Paper>
+  );
+};
+
+const FileNodeView: Component<{
   fileNode: SblFileNodeAssert;
   path: string;
 }> = (props) => {
   return (
-    <div>
-      <pre class="p-4 text-red-600 rounded-lg overflow-x-auto">
-        {JSON.stringify(props.fileNode, null, 2)}
-      </pre>
-      <hr />
-      <div class="flex justify-end gap-3 p-3">
-        <a href={`/api/fileNode/${props.path}`} class="btn">
-          <IconDownload class="shrink-0" />
-          <span>下载</span>
-        </a>
+    <Paper>
+      <div>
+        <pre class="p-4 text-red-600 rounded-lg overflow-x-auto">
+          {JSON.stringify(props.fileNode, null, 2)}
+        </pre>
+        <hr />
+        <div class="flex justify-end gap-3 p-3">
+          <a href={`/api/fileNode/${props.path}`} class="btn">
+            <IconDownload class="shrink-0" />
+            <span>下载</span>
+          </a>
+        </div>
       </div>
-    </div>
+    </Paper>
   );
 };
 
-const LoadingAlert = () => {
+const LoadingView = () => {
   return (
-    <div class="flex items-center text-slate-500">
-      <IconHourglassEmpty class="shrink-0 size-9 m-3 animate-spin" />
-      <span>加载中</span>
-    </div>
+    <Paper>
+      <div class="flex items-center text-slate-500">
+        <IconHourglassEmpty class="shrink-0 size-9 m-3 animate-spin" />
+        <span>加载中</span>
+      </div>
+    </Paper>
   );
 };
-const ErrorAlert: Component<{ error: any }> = (props) => {
+
+const ErrorView: Component<{ error: any }> = (props) => {
   return (
-    <div class="flex items-center text-red-500">
-      <IconError class="shrink-0 size-9 m-3" />
-      <span class="font-mono">{props.error.toString()}</span>
-    </div>
+    <Paper>
+      <div class="flex items-center text-red-500">
+        <IconError class="shrink-0 size-9 m-3" />
+        <span class="font-mono">{props.error.toString()}</span>
+      </div>
+    </Paper>
   );
 };
-const NotFoundFolderAlert = () => {
+
+const NotFoundFolderView = () => {
   return (
-    <div class="flex items-center text-slate-500">
-      <IconNotListedLocation class="shrink-0 size-9 m-3" />
-      <span>找不到指定文件夹</span>
-    </div>
+    <Paper>
+      <div class="flex items-center text-slate-500">
+        <IconNotListedLocation class="shrink-0 size-9 m-3" />
+        <span>找不到指定文件夹</span>
+      </div>
+    </Paper>
   );
 };
-const NotFoundFileAlert = () => {
+
+const NotFoundFileView = () => {
   return (
-    <div class="flex items-center text-slate-500">
-      <IconNotListedLocation class="shrink-0 size-9 m-3" />
-      <span>找不到指定文件</span>
+    <Paper>
+      <div class="flex items-center text-slate-500">
+        <IconNotListedLocation class="shrink-0 size-9 m-3" />
+        <span>找不到指定文件</span>
+      </div>
+    </Paper>
+  );
+};
+
+const Paper: Component<{ children: JSXElement }> = (props) => {
+  return (
+    <div class="bg-white mx-4 rounded-xl shadow overflow-hidden">
+      {props.children}
     </div>
   );
 };
